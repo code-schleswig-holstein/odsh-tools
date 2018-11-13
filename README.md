@@ -1,7 +1,7 @@
 # Datapusher
 
 This skript is intended to be used to create datasets based on data from a spreadsheet file,
-that could be either in Excel format (.xls, .xlsx) or CVS format.
+that could be either in Excel format (.xls, .xlsx) or CSV format.
 
 In the Initialisation section, first the correct settings of `Host` and `api_key` have to be set.
 The `api_key` can be found after login to ckan within the user details section.
