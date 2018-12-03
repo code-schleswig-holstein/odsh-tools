@@ -21,10 +21,10 @@ HTTPS = False
 # (User details are not shown anymore in the ODSH design)
 # HOST = "134.100.14.144"
 # api_key = '2177559e-29be-41a9-99c2-626d4be233d9'
-HOST = "192.168.56.201"
-api_key = 'ad9bd1cc-a985-4369-823b-1025035fa5bf'
-OWNER_ORG = 'landesamt-fur-soziale-dienste-sh'
-PATH = "/home/user/HITEC/ODSH"
+HOST = "10.61.47.219"
+api_key = 'fd49708b-91b3-492a-bdb0-93fa4c8e4d39'
+OWNER_ORG = 'lasd'
+PATH = "/home/ckanuser/lasdsh_log"
 # FILENAME = "Metadatentabelle_LAsDSH_2018-09-18.xlsx"
 FILENAME = "Metadatentabelle_Test.csv"
 CSV_FILE_DELIMITER = '\t'
@@ -206,13 +206,11 @@ def create_package(in_dict):
              temporal_end=in_dict['Zeitraum Ende'],
              notes=in_dict['Beschreibung'],
              license_id=VALID_LICENCES[in_dict['Lizenz']],
-             extras=create_extras(in_dict),
+             #extras=create_extras(in_dict),
+             extras=[],
              tags=create_tags(in_dict['Schlagwörte']),
-             # remove This!!!!
-             # -----------------------------------------------
-             publish_date=in_dict['Veröffentlichungsdatum'],
-             spatial_extension="Dummy",
-             # -----------------------------------------------
+             issued=in_dict['Veröffentlichungsdatum'],
+             spatial_uri=in_dict['Räumliche Ausdehnung'],
              groups=[{'name': in_dict['Kategorie'].lower()}])
 
 
