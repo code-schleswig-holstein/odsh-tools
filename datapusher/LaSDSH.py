@@ -1,5 +1,5 @@
 # This Python file uses the following encoding: utf-8
-from ckanapi import RemoteCKAN, NotFound
+from ckanapi import RemoteCKAN, NotFound, CKANAPIError 
 import xlrd
 import csv
 import sys
@@ -178,6 +178,10 @@ def create_urlname(name):
             name_with_id = name_out + str(id)
         except NotFound:
             vacant = True
+        except CKANAPIError:
+            # (May occur if skript is not authorized to show a package, but url exists)
+            id += 1
+            name_with_id = name_out + str(id)
     return name_with_id
 
 
