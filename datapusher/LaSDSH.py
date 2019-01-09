@@ -23,7 +23,7 @@ HTTPS = False
 # api_key = '2177559e-29be-41a9-99c2-626d4be233d9'
 HOST = "10.61.47.219"
 api_key = 'fd49708b-91b3-492a-bdb0-93fa4c8e4d39'
-OWNER_ORG = 'lasd'
+OWNER_ORG = 'landesamt-fuer-soziale-dienste'
 PATH = "/home/ckanuser/lasdsh_log"
 # FILENAME = "Metadatentabelle_LAsDSH_2018-09-18.xlsx"
 FILENAME = "Metadatentabelle_Test.csv"
@@ -115,9 +115,9 @@ def create_csv_dict(keys, vals):
     for i, item in enumerate(keys):
         try:
             if item == "Veröffentlichungsdatum":
-                result[item] = datetime.datetime.strptime(vals[i], "%d.%m.%Y").isoformat()
-            elif item == "Zeitraum Beginn" or item == "Zeitraum Ende":
-                result[item] = datetime.datetime.strptime(vals[i], "%Y-%m-%d").isoformat()
+                result[item] = datetime.datetime.strptime(vals[i], "%Y-%m-%d").isoformat().split("T")[0]
+            elif item == "Zeitraum Beginn" or (item == "Zeitraum Ende" and vals[i] != ""):
+                result[item] = datetime.datetime.strptime(vals[i], "%Y-%m-%d").isoformat().split("T")[0]
             else:
                 result[item] = vals[i]
         except Exception as e:
@@ -140,8 +140,8 @@ def test_on_valid_entries(in_dict):
             raise ValueError('"Veröffentlichungsdatum" is empty')
         if in_dict['Zeitraum Beginn'] == "":
             raise ValueError('"Zeitraum Beginn" is empty')
-        if in_dict['Zeitraum Ende'] == "":
-            raise ValueError('"Zeitraum Ende" is empty')
+#        if in_dict['Zeitraum Ende'] == "":
+#            raise ValueError('"Zeitraum Ende" is empty')
         if in_dict['Räumliche Ausdehnung'] == "":
             raise ValueError('"Räumliche Ausdehnung" is empty')
         if in_dict['Kategorie'].lower() not in GROUPS_LIST:
@@ -189,6 +189,10 @@ def create_extras(in_dict):
     result = []
     result.append({'key': 'issued', 'value': in_dict['Veröffentlichungsdatum']})
     result.append({'key': 'spatial_uri', 'value': in_dict['Räumliche Ausdehnung']})
+    result.append({'key': 'licenseAttributionByText', 'value': in_dict['Text für Namensnennung']})
+    result.append({'key': 'temporal_start', 'value': in_dict['Zeitraum Beginn']})
+    if in_dict['Zeitraum Ende'] != "":
+        result.append({'key': 'temporal_end', 'value': in_dict['Zeitraum Ende']})
     return result
 
 
@@ -206,15 +210,10 @@ def create_package(in_dict):
              title=in_dict['Titel'],
              name=create_urlname(in_dict['Titel']),
              owner_org=OWNER_ORG,
-             temporal_start=in_dict['Zeitraum Beginn'],
-             temporal_end=in_dict['Zeitraum Ende'],
              notes=in_dict['Beschreibung'],
              license_id=VALID_LICENCES[in_dict['Lizenz']],
-             #extras=create_extras(in_dict),
-             extras=[],
+             extras=create_extras(in_dict),
              tags=create_tags(in_dict['Schlagwörte']),
-             issued=in_dict['Veröffentlichungsdatum'],
-             spatial_uri=in_dict['Räumliche Ausdehnung'],
              groups=[{'name': in_dict['Kategorie'].lower()}])
 
 
@@ -233,14 +232,16 @@ def create_resource(d_url, z_url, id):  # Download-, Zugriffs-URL and id of the 
         filetype = d_url.split('.')[-1]  # File extensions, i.e. the part after the last '.'.
         r_ckan.action.resource_create(
           package_id=id,
-          description="dummy",
           upload=open(os.path.join(PATH, d_url), 'rb'),
           name=d_url[:-(len(filetype) + 1)],  # Resourcename from Download-URL without extension
           format=filetype.upper())
     else:  # Zugriffs-URL != None
-        # description is mandatory for the moment
         r_ckan.action.resource_create(
-          package_id=id, url=z_url, description=z_url.split('/')[-1], name=z_url.split('/')[-1])
+          package_id=id,
+          url=z_url,
+          description=z_url.split('/')[-1],
+          name=z_url.split('/')[-1],
+          format=z_url.split('.')[-1].upper())
     return True
 
 
