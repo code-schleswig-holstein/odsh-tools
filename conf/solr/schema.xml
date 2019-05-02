@@ -90,14 +90,21 @@ schema. In this case the version should be set to the next CKAN version number.
         distanceUnits="degrees" />
 
 <!-- Defining customised data type for lower casing. -->
-<fieldType name="text_lower" class="solr.TextField" positionIncrementGap="100">
-  <analyzer type="index">
-     <tokenizer class="solr.LowerCaseTokenizerFactory"/> 
-  </analyzer>
-  <analyzer type="query">
-     <tokenizer class="solr.LowerCaseTokenizerFactory"/> 
-  </analyzer>
-</fieldType>
+    <fieldType name="text_lower" class="solr.TextField" positionIncrementGap="100">
+        <analyzer type="index">
+            <tokenizer class="solr.LowerCaseTokenizerFactory"/>
+        </analyzer>
+        <analyzer type="query">
+            <tokenizer class="solr.LowerCaseTokenizerFactory"/>
+        </analyzer>
+    </fieldType>
+
+    <fieldType name="string_lower" class="solr.TextField" sortMissingLast="true" omitNorms="true">
+        <analyzer>
+            <tokenizer class="solr.KeywordTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory" />
+        </analyzer>
+    </fieldType>
 
     <fieldType name="textbasesuggest" class="solr.TextField" positionIncrementGap="100">
       <analyzer type="index">
@@ -194,7 +201,7 @@ schema. In this case the version should be set to the next CKAN version number.
 
     <!-- Copy the title field into titleString, and treat as a string
          (rather than text type).  This allows us to sort on the titleString -->
-    <field name="title_string" type="string" indexed="true" stored="false" />
+    <field name="title_string" type="string_lower" indexed="true" stored="false" />
 
     <field name="data_dict" type="string" indexed="false" stored="true" />
     <field name="validated_data_dict" type="string" indexed="false" stored="true" />
