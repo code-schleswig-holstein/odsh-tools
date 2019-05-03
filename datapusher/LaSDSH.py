@@ -264,11 +264,11 @@ logger.addHandler(fh)
 fileformat = ""
 try:
     if FILENAME.split('.')[-1].upper() in ["XLS", "XLSX"]:
-        wb = xlrd.open_workbook(os.path.join(PATH, FILENAME))
+        wb = xlrd.open_workbook(os.path.join(RESOURCE_PATH, FILENAME))
         fileformat = "Excel"
     elif FILENAME.split('.')[-1].upper() == "CSV":
         rows = []
-        with open(os.path.join(PATH, FILENAME)) as csvfilehandler:
+        with open(os.path.join(RESOURCE_PATH, FILENAME)) as csvfilehandler:
             csvreader = csv.reader(csvfilehandler, delimiter=CSV_FILE_DELIMITER)
             for row in csvreader:
                 rows.append(row)
@@ -276,10 +276,10 @@ try:
         if len(row[0]) == 1:  # More than just one column is expected
             raise ValueError("Wrong CSV file delimiter.")
     else:
-        raise ValueError("File format not recognised of %s!" % os.path.join(PATH, FILENAME))
+        raise ValueError("File format not recognised of %s!" % os.path.join(RESOURCE_PATH, FILENAME))
 except (IOError, FileNotFoundError) as e:
-    logger.error("Could not find Metadata file at " + os.path.join(PATH, FILENAME))
-    print("Could not find Metadata file at " + os.path.join(PATH, FILENAME))
+    logger.error("Could not find Metadata file at " + os.path.join(RESOURCE_PATH, FILENAME))
+    print("Could not find Metadata file at " + os.path.join(RESOURCE_PATH, FILENAME))
     sys.exit()
 except ValueError as e:
     logger.error(str(e))
