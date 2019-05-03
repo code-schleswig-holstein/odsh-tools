@@ -100,7 +100,7 @@ def create_xls_dict(keys, vals, datemode):
                   str(xlrd.xldate_as_tuple(vals[i].value,
                       datemode)), "(%Y, %m, %d, %H, %M, %S)").isoformat()
             elif vals[i].ctype == xlrd.XL_CELL_EMPTY:
-                result[item] = None
+                result[item] = ""
             else:
                 print("Excel cell type " + str(vals[i].ctype) + " not supported yet!")
         except Exception as e:
