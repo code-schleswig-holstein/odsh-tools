@@ -18,7 +18,6 @@ elif sys.version_info[0] == 3:  # >=Python3.1
 # HTTP or HTTPS?
 HTTPS = False
 # The api-key can be found at user-details after login.
-# (User details are not shown anymore in the ODSH design)
 # HOST = "134.100.14.144"
 # api_key = '2177559e-29be-41a9-99c2-626d4be233d9'
 HOST = "10.61.47.219"
