@@ -53,16 +53,20 @@ my $LOG;
 open($LOG, "+>>$ARGV[0]") or die "Can't write to file '$ARGV[0]' [$!]\n" ;
 
 
-
+#Nur für IPv4
 # Daten sofort in die Zieldatei schreiben, ohne Pufferung auf Perl-Seite.
 $LOG->autoflush(1);
 
 while (my $Line = <STDIN>) {
     chomp $Line;
 
-    # hier wird einfach zweimal nach einer ip gesucht und diese ersetzt
-    $Line =~ s/^(.*?\d+\.\d+)\.\d+\.\d+(.*)/$1.0.0$2/;
-    $Line =~ s/^(.*?\d+\.\d+)\.\d+\.\d+(.*)/$1.0.0$2/;
+    # hier wird einfach viermal nach Fragmenten einer IP gesucht und diese durch Buchstaben erstetzt. 
+    # Die alte Version hat zweimal die selbe IP Adresse ersetzt. Die erschöpftende Suche mit s///e funktioniert mit dem Apache nicht.
+    # Bis zu vier IP Adressen werden überschrieben, inklusive Server - Adresse. 
+        $Line =~ s/\.\d{1,3}\.\d{1,3}\.\d{1,3}/.X.X.X/;
+        $Line =~ s/\.\d{1,3}\.\d{1,3}\.\d{1,3}/.X.X.X/;
+        $Line =~ s/\.\d{1,3}\.\d{1,3}\.\d{1,3}/.X.X.X/;
+        $Line =~ s/\.\d{1,3}\.\d{1,3}\.\d{1,3}/.X.X.X/;
 
 
     print $LOG "$Line\n";
