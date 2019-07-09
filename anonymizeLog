@@ -60,9 +60,7 @@ $LOG->autoflush(1);
 while (my $Line = <STDIN>) {
     chomp $Line;
 
-    # hier wird einfach viermal nach Fragmenten einer IP gesucht und diese durch Buchstaben erstetzt. 
-    # Die alte Version hat zweimal die selbe IP Adresse ersetzt. Die erschöpftende Suche mit s///e funktioniert mit dem Apache nicht.
-    # Bis zu vier IP Adressen werden überschrieben, inklusive Server - Adresse. 
+    # Erschöpftende Suche mit s/Pattern/Replacement/g; zuerst wird Slave, Master und Data-Server ersetzt anschließend, alle IP adressen mit ersetzt. 
         $Line =~ s/IP-Adresse-SlaveServer/SlaveServer/g;
         $Line =~ s/IP-Adresse-MasterServer/MasterServer/g;
         $Line =~ s/IP-Adresse-PSQL_Sever/DataServer/g;
