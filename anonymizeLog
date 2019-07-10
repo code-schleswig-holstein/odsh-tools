@@ -61,10 +61,8 @@ while (my $Line = <STDIN>) {
     chomp $Line;
 
     # Erschöpftende Suche mit s/Pattern/Replacement/g; zuerst wird Slave, Master und Data-Server ersetzt anschließend, alle IP adressen mit ersetzt. 
-        $Line =~ s/IP-Adresse-SlaveServer/SlaveServer/g;
-        $Line =~ s/IP-Adresse-MasterServer/MasterServer/g;
-        $Line =~ s/IP-Adresse-PSQL_Sever/DataServer/g;
-        $Line =~ s/\.\d{1,3}\.\d{1,3}\.\d{1,3}/.X.X.X/g;
+        $Line =~ s/(\d{1,3})\.(\d{1,3})\.\d{1,3}\.\d{1,3}/$1.$2.0.0/g;
+
 
 
     print $LOG "$Line\n";
